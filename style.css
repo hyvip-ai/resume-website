@@ -1,0 +1,42 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+body {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  margin: 0;
+  background: radial-gradient(#292929, #000000);
+
+}
+
+.worldButton {
+  transform:translateX(-50%);
+  color: #fff;
+  height: 40px;
+  padding: 10px 25px;
+  font-family: 'Lato', sans-serif;
+  font-weight: 600;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: absolute;
+  display: inline-block;
+  border: none;
+  background-color: #ff9aff;
+  box-shadow: 0 0 5px #ef97e8;
+  bottom: 10%;
+  left: 50%;
+  font-size:18px;
+}
+
+.worldButton:hover {
+  box-shadow: 0 0 10px #ef97e8, 0 0 20px #ef97e8, 0 0 20px #fff inset;
+}
+.worldButton:active{
+  scale:0.95;
+}
