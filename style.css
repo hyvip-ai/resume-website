@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
+
 * {
   margin: 0;
   padding: 0;
@@ -7,36 +9,103 @@
 
 body {
   height: 100vh;
-  width: 100vw;
-  overflow: hidden;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: scroll;
   margin: 0;
-  background: radial-gradient(#292929, #000000);
-
 }
 
-.worldButton {
-  transform:translateX(-50%);
-  color: #fff;
-  height: 40px;
-  padding: 10px 25px;
-  font-family: 'Lato', sans-serif;
-  font-weight: 600;
-  background: transparent;
-  cursor: pointer;
-  transition: all 0.3s ease;
+
+main {
+  background-color: hsla(0, 0%, 0%, 1);
+  background-image:
+    radial-gradient(at 52% 46%, hsla(0, 0%, 100%, 0.12) 0px, transparent 50%),
+    radial-gradient(at 40% 20%, hsla(25, 0%, 0%, 1) 0px, transparent 50%),
+    radial-gradient(at 92% 0%, hsla(0, 93%, 30%, 0.25) 0px, transparent 50%),
+    radial-gradient(at 0% 50%, hsla(355, 0%, 0%, 1) 0px, transparent 50%),
+    radial-gradient(at 80% 50%, hsla(316, 0%, 0%, 1) 0px, transparent 50%),
+    radial-gradient(at 33% 100%, hsla(174, 100%, 77%, 0.17) 0px, transparent 50%),
+    radial-gradient(at 80% 100%, hsla(240, 0%, 0%, 1) 0px, transparent 50%),
+    radial-gradient(at 24% 36%, hsla(236, 100%, 50%, 0.46) 0px, transparent 50%);
+  width: 100vw;
+  z-index: 99;
   position: absolute;
-  display: inline-block;
-  border: none;
-  background-color: #ff9aff;
-  box-shadow: 0 0 5px #ef97e8;
-  bottom: 10%;
-  left: 50%;
-  font-size:18px;
+  top: 0;
+  margin: 0px auto;
+  padding: 100px 50px;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
 }
 
-.worldButton:hover {
-  box-shadow: 0 0 10px #ef97e8, 0 0 20px #ef97e8, 0 0 20px #fff inset;
+
+h1,
+h2,
+h3,
+blockquote {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  background-color: white;
+  color: black;
+  text-align: center;
+  padding: 8px;
 }
-.worldButton:active{
-  scale:0.95;
+
+.welcome {
+  grid-column: 4 / 10;
+}
+
+.welcome h1 {
+  font-size: 100px;
+}
+
+.slide1 {
+  padding-top: 180vh;
+  grid-column: 1 / 7;
+}
+
+.name {
+  font-size: 80px;
+}
+
+.slide2 {
+  padding-top: 180vh;
+  grid-column: 6 / 13;
+}
+
+.opportunity {
+  font-size: 60px;
+}
+
+.slide3 {
+  padding-top: 180vh;
+  grid-column: 2 / 12;
+}
+
+.world {
+  font-size: 60px;
+}
+
+.slide4 {
+  height: 150vh;
+  grid-column: 4 / 10;
+}
+
+.slide5 {
+  height: 180vh;
+  grid-column: 4 / 10;
+}
+
+
+
+.tunnel {
+  height: 1100vh;
+  grid-column: 4 / 10;
+}
+
+
+canvas {
+  position: fixed;
+  top: 0;
+  z-index: 100;
 }
