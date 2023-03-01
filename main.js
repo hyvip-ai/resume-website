@@ -340,8 +340,7 @@ slide1
     { y: 0 },
     {
       y: 0.8,
-    },
-    '<'
+    }
   );
 
 const slide2 = gsap.timeline({
