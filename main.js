@@ -79,7 +79,7 @@ function addPlanet() {
   const pointLight2 = new THREE.PointLight(0xa1251b, 1);
   pointLight2.position.set(-200, 200, 200);
 
-  const depthTexture = new THREE.TextureLoader().load('./texture/depth2.jpg');
+  const depthTexture = new THREE.TextureLoader().load('/texture/depth2.jpg');
   depthTexture.wrapS = THREE.RepeatWrapping;
   depthTexture.wrapT = THREE.RepeatWrapping;
 
@@ -106,7 +106,7 @@ function addPlanet() {
 
   const cloudGeometry = new THREE.SphereGeometry(133);
   const cloudMaterial = new THREE.MeshPhongMaterial({
-    map: new THREE.TextureLoader().load('texture/earthCloud.png'),
+    map: new THREE.TextureLoader().load('/texture/earthCloud.png'),
     transparent: true,
     color: 0xffffff,
   });
@@ -316,7 +316,7 @@ const slide1 = gsap.timeline({
   scrollTrigger: {
     trigger: '.slide1',
     scrub: 1,
-    markers: true,
+    // markers: true,
     start: '20 0',
     end: '100% 100%',
   },
