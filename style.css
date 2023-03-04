@@ -99,10 +99,15 @@ blockquote {
 
 
 .tunnel {
-  height: 1100vh;
+  height: 1380vh;
   grid-column: 4 / 10;
 }
 
+
+.slide7 {
+  height: 300vh;
+  grid-column: 3 / 11;
+}
 
 canvas {
   position: fixed;

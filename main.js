@@ -3,9 +3,7 @@ import ScrollTrigger from 'gsap/ScrollTrigger';
 import * as THREE from 'three';
 
 const additionalRotation = 72;
-let angle = 0;
-let mainRotation = 0;
-let shouldRotate = false;
+
 const sizes = {
   width: window.innerWidth,
   height: window.innerHeight,
@@ -20,7 +18,10 @@ let planet,
   p2,
   tube,
   path,
-  atTunnel = false;
+  wireframe,
+  atTunnel = false,
+  torusAdded = false,
+  tunnelDone = false;
 
 let points = [
   [10, 89, 0],
@@ -158,11 +159,10 @@ function addPlanet() {
 }
 
 function addTunnel() {
-  //Create a new geometry with a different radius
   let geometry = new THREE.TubeGeometry(path, 300, 10, 35, false);
 
   let texture = new THREE.TextureLoader().load(
-    'https://s3-us-west-2.amazonaws.com/s.cdpn.io/68819/3d_space_5.jpg',
+    '/texture/3d_space.jpg',
     function (texture) {
       texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
       texture.offset.set(0, 0);
@@ -171,11 +171,11 @@ function addTunnel() {
   );
 
   let material = new THREE.MeshPhongMaterial({
-    side: THREE.BackSide,
+    side: THREE.DoubleSide,
     normalMap: texture,
     shininess: 20,
     specular: 0x0b2349,
-    color: 0xffffff,
+    color: 0x9d00ff,
   });
 
   //Create a mesh
@@ -184,7 +184,21 @@ function addTunnel() {
     child.visible = false;
   });
   scene.add(tube);
-  //Push the mesh into the scene
+
+  const wireFrameGro = new THREE.TubeGeometry(path, 60, 8, 32, false);
+  const geo = new THREE.EdgesGeometry(wireFrameGro);
+
+  const mat = new THREE.LineBasicMaterial({
+    linewidth: 2,
+    opacity: 0.2,
+    transparent: 1,
+  });
+
+  wireframe = new THREE.LineSegments(geo, mat);
+  wireframe.traverse((child) => {
+    child.visible = false;
+  });
+  scene.add(wireframe);
 }
 
 // tunnel
@@ -204,7 +218,6 @@ function addDiscoTorus() {
   const cuboidWidth = getRandomInt(10, 15);
   const cuboidHeight = 1;
   const cuboidDepth = getRandomInt(4, 6);
-  const cuboids = [];
   for (let i = 0; i < numCuboids; i++) {
     let position = new THREE.Vector3();
 
@@ -230,20 +243,15 @@ function addDiscoTorus() {
     cuboid.position.copy(position);
     cuboid.position.y += getRandomInt(-6, 6);
     planes.push(cuboid);
-    cuboids.push(cuboid);
     scene.add(cuboid);
   }
 }
 
-function rotateDisco() {
-  shouldRotate = false;
-  angle += (Math.PI / 180) * additionalRotation; // increment the angle by additionalRotation degree
-  const rotationMatrix = new THREE.Matrix4().makeRotationY(angle); // create a rotation matrix around the Y-axis
+function changeDiscoTorusPosition() {
   planes.forEach((cuboid) => {
-    const rotatedPosition = cuboid.position
-      .clone()
-      .applyMatrix4(rotationMatrix); // apply the rotation matrix to the position of the cuboid
-    cuboid.position.copy(rotatedPosition); // set the new position of the cuboid
+    cuboid.position.x += 550;
+    cuboid.position.z += 60;
+    cuboid.position.y -= 180;
   });
 }
 
@@ -259,9 +267,13 @@ addPlanet();
 
 addTunnel();
 
-// for (let i = -8; i <= 0; i += 1) {
-//   addDiscoTorus();
-// }
+function addDisco() {
+  for (let i = -8; i <= 0; i += 1) {
+    addDiscoTorus();
+  }
+
+  changeDiscoTorusPosition();
+}
 
 function render() {
   requestAnimationFrame(render);
@@ -274,21 +286,12 @@ function render() {
   planetSkeleton.rotation.y -= 0.002;
   particle.rotation.x += 0.0;
   particle.rotation.y -= 0.0004;
-  if (shouldRotate) {
-    mainRotation += Math.PI / 1800000; // increment the angle by additionalRotation degree
-    const rotationMatrix = new THREE.Matrix4().makeRotationY(mainRotation); // create a rotation matrix around the Y-axis
-    planes.forEach((cuboid) => {
-      const rotatedPosition = cuboid.position
-        .clone()
-        .applyMatrix4(rotationMatrix); // apply the rotation matrix to the position of the cuboid
-      cuboid.position.copy(rotatedPosition); // set the new position of the cuboid
-    });
-  }
 
-  if (atTunnel) {
+  if (atTunnel && !tunnelDone) {
     currentCameraPercentage = cameraTargetPercentage;
     updateCameraPercentage(currentCameraPercentage);
   }
+  // console.log(camera.position.x, camera.position.y, camera.position.z);
   renderer.render(scene, camera);
 }
 
@@ -316,7 +319,6 @@ const slide1 = gsap.timeline({
   scrollTrigger: {
     trigger: '.slide1',
     scrub: 1,
-    // markers: true,
     start: '20 0',
     end: '100% 100%',
   },
@@ -347,7 +349,6 @@ const slide2 = gsap.timeline({
   scrollTrigger: {
     trigger: '.slide2',
     scrub: 1,
-    // markers: true,
     start: '20 0',
     end: '100% 100%',
   },
@@ -361,7 +362,6 @@ const slide3 = gsap.timeline({
   scrollTrigger: {
     trigger: '.slide3',
     scrub: 1,
-    // markers: true,
     start: '20 0',
     end: '100% 100%',
   },
@@ -383,7 +383,6 @@ const tunnelMouth = gsap.timeline({
   scrollTrigger: {
     trigger: '.slide4',
     scrub: 1,
-    // markers: true,
     start: '20 0',
   },
   onUpdate: () => {
@@ -392,8 +391,14 @@ const tunnelMouth = gsap.timeline({
       tube.traverse((child) => {
         child.visible = true;
       });
+      wireframe.traverse((child) => {
+        child.visible = true;
+      });
     } else {
       tube.traverse((child) => {
+        child.visible = false;
+      });
+      wireframe.traverse((child) => {
         child.visible = false;
       });
     }
@@ -433,7 +438,6 @@ const tunnelMouthRotate = gsap.timeline({
   scrollTrigger: {
     trigger: '.slide5',
     scrub: 1,
-    // markers: true,
     start: '20 0',
     end: '100% 100%',
   },
@@ -457,10 +461,34 @@ let tunnel = gsap.timeline({
 tunnel.to(tubePerc, {
   percent: 0.96,
   ease: Linear.easeNone,
-  duration: 10,
   onUpdate: function () {
+    if (tubePerc.percent >= 0.7 && !torusAdded) {
+      addDisco();
+      torusAdded = true;
+    }
     cameraTargetPercentage = tubePerc.percent;
   },
+});
+
+const slide7 = gsap.timeline({
+  scrollTrigger: {
+    trigger: '.slide7',
+    scrub: 1,
+    start: '20 0',
+    end: '100% 100%',
+    markers: true,
+  },
+  onUpdate: () => {
+    if (!tunnelDone) {
+      tunnelDone = true;
+    }
+  },
+});
+
+slide7.to(camera.position, {
+  x: 450,
+  z: 60,
+  y: -100,
 });
 
 // about me
